@@ -1,0 +1,189 @@
+{%- extends "sumario/dashboard-0.html" -%}
+
+{%- block sidebar -%}
+{{ super() }}
+
+<div class="box">
+  <p>
+    Use
+    <a class="is-link" href="#" onclick="showModal('example-modal');">
+      the example form to send a sample submission
+    </a>
+  </p>
+</div>
+{% endblock %}
+
+{%- block content -%}
+<div id="example-modal" class="modal">
+  <div class="modal-background" onclick="hideModal('example-modal');"></div>
+  <button class="modal-close is-large" onclick="hideModal('example-modal');"></button>
+  <div class="modal-content">
+    <div class="box">
+      <form id="example-form" method="POST" action="#">
+        <div class="field">
+          <label class="label">
+            {{ _("Email") }}
+          </label>
+          <p class="control">
+            <input class="input" type="email" name="Email" value="{{ current_user.email }}">
+          </p>
+        </div>
+        <div class="field">
+          <label class="label">
+            {{ _("Message") }}
+          </label>
+          <p class="control">
+            <textarea class="textarea" name="Message">{{ _("Sumario is awesome!") }}</textarea>
+          </p>
+        </div>
+        <div class="field">
+          <label class="label">
+            {{ _("Favorite thing") }}
+          </label>
+          <span class="control select">
+            <select name="Favorite Thing">
+              <option selected>
+                {{ _("Thing 1") }}
+              </option>
+              <option>
+                {{ _("Thing 2") }}
+              </option>
+            </select>
+          </span>
+        </div>
+        <div class="field">
+          <label class="label">
+            {{ _("Which fish") }}
+          </label>
+          <p class="control">
+            <label class="radio" for="one-fish">
+              <input id="one-fish" type="radio" name="{{ _('Which fish') }}" value="{{ _('One fish') }}">
+              {{ _("One fish") }}
+            </label>
+            <label class="radio" for="two-fish">
+              <input id="two-fish" type="radio" name="{{ _('Which fish') }}" value="{{ _('Two fish') }}" checked>
+              {{ _("Two fish") }}
+            </label>
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="checkbox">
+              <input type="checkbox" name="{{ _('Agrees') }}" value="{{ _('Yes') }}" checked>
+              {{ _("I agree") }}
+            </label>
+          </p>
+        </div>
+        <hr>
+        <div class="field is-horizontal is-fullwidth">
+          <div class="field-label is-normal">
+            <label class="label" for="relays">
+              {{ _("Select relay") }}
+            </label>
+          </div>
+          <div class="field-body">
+            <div class="field has-addons">
+              <p class="control">
+                <span class="select">
+                  <select id="relays" onChange="setExampleFormAction(this.value);">
+                    {% for relay in relays %}
+                    <option class="example-form-name" value="{{ url_for('submission.submission', uuid=relay.uuid) }}">
+                      {{ relay.name }}
+                    </option>
+                    {% endfor %}
+                  </select>
+                </span>
+              </p>
+              <p class="control">
+                <input class="button is-primary" type="submit" value="{{ _('Send') }}">
+              </p>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<p class="title">
+  {{ _("Relays") }}
+</p>
+
+{%- import "sumario/form.html" as form -%}
+
+{% for list_relay_form, relay in list_relay_forms_models %}
+<div class="box">
+  <div class="columns is-vcentered">
+    <div class="column is-2 has-text-centered">
+      <p class="heading">
+        {{ _("Submissions") }}
+      </p>
+      <p class="title">
+        {{ relay.submissions.count() }}
+      </p>
+    </div>
+    <div class="column">
+      <div class="columns">
+        <div class="column">
+          {{ form.render_form(list_relay_form) }}
+          <label class="label">
+            {{ _("Form action") }}
+          </label>
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input id="submission-url-{{ loop.index }}" class="input" type="text" value="{{ url_for('submission.submission', uuid=relay.uuid) }}" readonly>
+            </div>
+            <div class="control">
+              <a class="button clipboard-elem" data-clipboard-target="#submission-url-{{ loop.index }}">
+                {{ _("Copy") }}
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="column is-2">
+          <div class="field">
+            <div class="control">
+              <a class="button is-fullwidth" href="{{ url_for("dashboard.edit", uuid=relay.uuid) }}">
+                {{ _("Edit") }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}
+
+{%- block tail -%}
+{{ super() }}
+
+<script>
+ var setExampleFormAction = setAttrById.bind(null, "example-form", "action");
+
+ addOnLoadFn(function() {
+     setExampleFormAction(getElemById("relays").value);
+
+     Array.prototype.filter.call(document.getElementsByClassName("clipboard-elem"), function(elem) {
+         var state = {
+             innerHTML: elem.innerHTML,
+             timeout: null,
+             className: "is-primary",
+         };
+         var clipboard = new ClipboardJS(elem);
+         clipboard.on("success", function(clipboardEvent) {
+             clearTimeout(state.timeout);
+             addClass(elem, state.className);
+             elem.innerHTML = "{{ _('Copied!') }}";
+             state.timeout = setTimeout(function(innerHTML) {
+                 removeClass(elem, state.className);
+                 elem.innerHTML = innerHTML;
+             }, 2000, state.innerHTML);
+         });
+     });
+ });
+</script>
+
+<script src="{{ hashed_url_for('/js/clipboard.min.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,39 @@
+{%- extends "sumario/with-menubar.html" -%}
+
+{%- block sidebar -%}
+{{ super() }}
+
+{%- import "sumario/form.html" as form -%}
+
+<div class="box">
+  <form method="POST" action="{{ url_for('dashboard.dashboard') }}">
+    {{ form.render_form(new_relay_form) }}
+  </form>
+</div>
+{% endblock %}
+
+{%- block content -%}
+<div class="content">
+  <div class="block">
+    <p class="title">
+      {{ _("Welcome") }}
+    </p>
+    <p class="subtitle">
+      {{ _("Watch this video to get started") }}
+    </p>
+  </div>
+  <div class="block">
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/CmQzqRfYX1I?si=y99gBgPmAiaI-Hx5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  </div>
+</div>
+{% endblock %}
+
+{%- block tail -%}
+{{ super() }}
+
+<script>
+  addOnLoadFn(function() {
+    selectTab("dashboard-tab");
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: dockerfile; -*-
+FROM registry.fedoraproject.org/fedora:38
+LABEL maintainer="Tom Vaughan <tvaughan@tocino.cl>"
+
+ENV LC_ALL=C.UTF-8 LANG=C.UTF-8
+
+ARG GITLAB_USERNAME GITLAB_PASSWORD VERSION
+
+RUN dnf alias add install="\install --setopt=install_weak_deps=False --best"    \
+    && rm -f /etc/yum.repos.d/fedora-cisco-openh264.repo
+
+RUN rm -rf /var/cache/{dnf,yum}/*                                               \
+    && dnf install -y                                                           \
+        python3-gunicorn                                                        \
+        python3-pip                                                             \
+    && rm -rf /var/cache/{dnf,yum}/*                                            \
+    && dnf clean all
+
+RUN python3 -m pip install "sumario==${VERSION}"                                \
+    --index-url https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@gitlab.com/api/v4/projects/48453638/packages/pypi/simple
+
+CMD ["python3", "-m", "gunicorn", "-w", "4", "-b", "0.0.0.0:3000", "--preload", "sumario.app:run()"]

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="{{ locale.language }}">
+  <head>
+    <meta charset="utf-8">
+    <title>Sumario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ hashed_url_for('/images/favicon.png') }}">
+    <link rel="stylesheet" href="{{ hashed_url_for('/css/bulma.min.css') }}">
+    <link rel="stylesheet" href="{{ hashed_url_for('/css/sumario.min.css') }}">
+    {% block head %}{% endblock %}
+    <script src="https://checkout.stripe.com/v2/checkout.js"></script>
+  </head>
+  <body>
+    <section class="hero is-fullheight is-light">
+      <div class="hero-head">
+        {% block menubar %}{% endblock %}
+      </div>
+      <div class="hero-body align-up" style="align-items: normal;">
+        <div class="container">
+          {% block columns %}
+          <div class="columns">
+            <div class="column is-3">
+              {% block sidebar %}{% endblock %}
+            </div>
+            <div class="column">
+              {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+              {% for category, message in messages %}
+              <div id="message-{{ loop.index }}" class="columns">
+                <div class="column">
+                  <div class="notification is-{{ category }}">
+                    <button class="delete" onclick="hideElem('message-{{ loop.index }}')"></button>
+                    {{ message|safe }}
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+              {% endif %}
+              {% endwith %}
+              {% block content %}{% endblock %}
+            </div>
+          </div>
+          {% endblock %}
+        </div>
+      </div>
+    </section>
+    <footer class="footer">
+      <div class="container">
+        <div class="content has-text-centered">
+          <p>
+            {% trans url="https://www.jstvsolutions.com" %}
+            &copy; <a class="is-link" href="{{ url }}">JSTV Solutions, LLC</a> All rights reserved
+            {% endtrans %}
+          </p>
+        </div>
+      </div>
+    </footer>
+    <script src="{{ hashed_url_for('/js/sumario.min.js') }}"></script>
+    {% block tail %}{% endblock %}
+  </body>
+</html>

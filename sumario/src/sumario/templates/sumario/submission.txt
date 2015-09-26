@@ -1,0 +1,9 @@
+{% trans url=request.referrer|default(_("an unknown website"), true), now=now %}
+Form submission from {{ url }} at {{ now }}
+{% endtrans %}
+
+{% for key in form|sort %}
+    {{ key }}: {{ form.get(key) }}
+{% endfor %}
+
+https://sumar.io, {{ _("The best way to handle forms on any website") }}

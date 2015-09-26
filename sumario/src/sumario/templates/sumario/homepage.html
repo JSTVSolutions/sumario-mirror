@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sumario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ hashed_url_for('/images/favicon.png') }}">
+    <link rel="stylesheet" href="{{ hashed_url_for('/css/bulma.min.css') }}">
+    <link rel="stylesheet" href="{{ hashed_url_for('/css/sumario.min.css') }}">
+    <script src="{{ hashed_url_for('/js/libsumario.min.js') }}"></script>
+  </head>
+  {% macro render_input(field) -%}
+  <div class="field">
+    <label for="{{ field.id }}">
+      {{ field.label.text|safe }}
+    </label>
+    <div class="control">
+      {{ field(class_='input', **kwargs) }}
+    </div>
+  </div>
+  {%- endmacro %}
+  <body>
+    <section class="hero is-fullheight is-light">
+      <div class="hero-body">
+        <div class="container">
+          <div class="block">
+            <p class="title is-1">
+              Sumario
+            </p>
+            <p class="subtitle is-3">
+              {{ _("The best way to handle forms on any website") }}
+            </p>
+          </div>
+          <div class="block">
+            <div class="box">
+              <div class="block">
+                <div class="columns">
+                  <div class="column is-8">
+                    <div class="block">
+                      <figure class="image is-16by9">
+                        <iframe class="has-ratio" width="560" height="315" src="https://www.youtube-nocookie.com/embed/gemWBKPBrXc?si=hMR-66hjitoHDwtm" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                      </figure>
+                    </div>
+                  </div>
+                  <div class="column is-4">
+                    <div class="block">
+                      <p class="title">
+                        {{ _("Create an account") }}
+                      </p>
+                      <p class="subtitle">
+                        {{ _("It's free to get started. No credit card required.") }}
+                      </p>
+                    </div>
+                    <hr>
+                    <div class="block">
+                      <form id="create-account-form" method="POST" action="#">
+                        <!-- TODO: https://github.com/lingthio/Flask-User/issues/177 -->
+                        <input id="reg_next" name="reg_next" type="hidden" value="{{ url_for('user.login') }}">
+                        {{ render_input(register_form.email, type="email") }}
+                        {{ render_input(register_form.password, type="password") }}
+                        <div class="field">
+                          <div class="control">
+                            <input onClick="Sumario.submit('create-account-form', '{{ url_for('user.register') }}');"
+                                   class="button is-primary" type="submit" value="{{ _('Create new account') }}">
+                          </div>
+                        </div>
+                        {{ register_form.hidden_tag() }}
+                      </form>
+                    </div>
+                    <div class="block">
+                      <p class="has-text-right">
+                        <a class="is-link" href="{{ url_for('user.login') }}">
+                          {{ _("Already have an account?") }}</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="block">
+            <div class="box">
+              <div class="block">
+                <div class="notification is-warning is-light m-0">
+                  <p class="is-size-3">
+                    {{ _("Sumario is Open Source") }}
+                  </p>
+                  <p>
+                    {% trans url="https://gitlab.com/jstvsolutions/sumario" %}
+                    Sumario is made available under the terms of the GNU Affero General Public License.
+                    Please visit the <a class="is-link" href="{{ url }}">Sumario source code repository on GitLab</a>
+                    to download the source code, submit a pull-request, or open a bug report.
+                    {% endtrans %}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="block">
+            <div class="box">
+              <div class="block">
+                <p class="title">
+                  {{ _("How does Sumario work?") }}
+                </p>
+                <p class="subtitle">
+                  {{ _("Use Sumario with these three simple steps") }}
+                </p>
+              </div>
+              <hr>
+              <div class="block">
+                <div class="columns">
+                  <div class="column is-4">
+                    <div class="block">
+                      <div class="card is-shadowless" style="border:solid;border-color:whitesmoke;border-width:1px;">
+                        <div class="card-image">
+                          <figure class="image">
+                            <img src="{{ hashed_url_for('/images/1NewRelay.gif') }}">
+                          </figure>
+                        </div>
+                        <div class="card-content">
+                          <p class="title is-4">
+                            {{ _("Step 1") }}
+                          </p>
+                          <div class="content">
+                            {{ _("Create a Relay in the Sumario dashboard") }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="column is-4">
+                    <div class="block">
+                      <div class="card is-shadowless">
+                        <div class="card-image">
+                          <figure class="image">
+                            <img src="{{ hashed_url_for('/images/2AddAction.gif') }}">
+                          </figure>
+                        </div>
+                        <div class="card-content">
+                          <p class="title is-4">
+                            {{ _("Step 2") }}
+                          </p>
+                          <div class="content">
+                            {{ _("Add the Action URL to your form") }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="column is-4">
+                    <div class="block">
+                      <div class="card is-shadowless">
+                        <div class="card-image">
+                          <figure class="image">
+                            <img src="{{ hashed_url_for('/images/3GetEmail.gif') }}">
+                          </figure>
+                        </div>
+                        <div class="card-content">
+                          <p class="title is-4">
+                            {{ _("Step 3") }}
+                          </p>
+                          <div class="content">
+                            {{ _("Collect responses") }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="block">
+            <div class="box">
+              <div class="block">
+                <p class="title">
+                  {{ _("Contact us") }}
+                </p>
+                <p class="subtitle">
+                  {{ _("Questions, comments, or concerns? We'd love to hear from you") }}
+                </p>
+              </div>
+              <hr>
+              <div class="block">
+                <div class="columns">
+                  <div class="column is-4">
+                    <div class="block">
+                      <form id="contact-us-form" method="POST" action="#">
+                        <div class="field">
+                          <label for="email">
+                            {{ _("Email") }}
+                          </label>
+                          <div class="control">
+                            <input id="email" class="input" type="email" name="Email" />
+                          </div>
+                        </div>
+                        <div class="field">
+                          <label for="message">
+                            {{ _("Message") }}
+                          </label>
+                          <div class="control">
+                            <textarea id="message" class="textarea" name="Message" rows="5"></textarea>
+                          </div>
+                        </div>
+                        <div class="field">
+                          <div class="control">
+                            <input onClick="Sumario.submit('contact-us-form', 'https://sumar.io/submission/2cf859d6-2218-4cca-bc83-02abfa68a29f');"
+                                   class="button is-primary" type="submit" value="{{ _('Send message') }}">
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="block">
+                      <p class="is-size-7">
+                        {{ _("This form is powered by Sumario") }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="column is-4">
+                    <div class="block">
+                      <div class="content">
+                        <ul>
+                          <li>
+                            {% trans email="hello@sumar.io" %}
+                            Email us at <a class="is-link" href="mailto:{{ email }}">{{ email }}</a>
+                            {% endtrans %}
+                          </li>
+                          <li>
+                            {% trans url="https://gitlab.com/jstvsolutions/sumario" %}
+                            Join our <a class="is-link" href="{{ url }}">developer community on GitLab</a>
+                            {% endtrans %}
+                          </li>
+                          <li>
+                            {% trans url="https://www.youtube.com/channel/UCw2UG1gR2w8TXzi8kfedByw" %}
+                            Check out our <a class="is-link" href="{{ url }}">YouTube Channel</a>
+                            {% endtrans %}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-foot">
+        <div class="container">
+          <div class="block">
+            <div class="content has-text-centered">
+              <p>
+                {% trans url="https://www.jstvsolutions.com" %}
+                &copy; <a class="is-link" href="{{ url }}">JSTV Solutions, LLC</a> All rights reserved
+                {% endtrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div id="hello" class="is-hidden">
+      {{ _("Hello, %(whom)s!", whom=whom) }}
+    </div>
+  </body>
+</html>

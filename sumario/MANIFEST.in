@@ -1,0 +1,4 @@
+include src/sumario/static/hashedassets.yml
+recursive-include src/sumario/static/public *
+recursive-include src/sumario/templates *
+recursive-include src/sumario/translations *

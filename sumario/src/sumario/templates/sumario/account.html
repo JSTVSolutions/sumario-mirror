@@ -1,0 +1,97 @@
+{%- extends "sumario/with-menubar.html" -%}
+
+{%- block sidebar -%}
+<div class="box">
+  <p>
+    Purchase <strong>{{ option.credits }}</strong> credits for
+    <strong>${{ '%.2f'|format(option.amount/100) }} {{ option.currency }}</strong>.
+    Such a deal!
+  </p>
+  <br>
+  <form method="POST" action="{{ url_for('account.account') }}">
+    <div class="field">
+      <p class="control">
+        <script class="stripe-button" src="https://checkout.stripe.com/v2/checkout.js"
+                data-amount="{{ option.amount }}"
+                data-currency="{{ option.currency }}"
+                data-description="Purchase {{ option.credits }} Credits"
+                data-email="{{ current_user.email }}"
+                data-key="{{ stripe.pubkey }}"
+                data-locale="auto"
+                data-name="Sumario"
+                data-zip-code="true">
+        </script>
+      </p>
+    </div>
+  </form>
+</div>
+
+<p>
+  <a class="is-link" href="{{ url_for('user.change_password') }}">
+    {{ _("Change password") }}
+  </a>
+</p>
+{% endblock %}
+
+{%- block content -%}
+<p class="title">
+  {{ _("Credit purchases") }}
+</p>
+
+<div class="box">
+  <nav class="level">
+    <div class="level-item">
+      <div>
+        <p class="heading has-text-centered">
+          {{ _("Date") }}
+        </p>
+        <span class="has-text-left">
+          {% for credit_purchase in credit_purchases %}
+          <p class="title">
+            {{ credit_purchase.created_at.strftime('%Y-%m-%d') }}
+          </p>
+          {% endfor %}
+        </span>
+      </div>
+    </div>
+    <div class="level-item">
+      <div>
+        <p class="heading has-text-centered">
+          {{ _("Amount") }}
+        </p>
+        <span class="has-text-left">
+          {% for credit_purchase in credit_purchases %}
+          <p class="title credit_purchase-amount">
+            ${{ '%.2f'|format(credit_purchase.amount/100) }} {{ credit_purchase.currency|upper }}
+          </p>
+          {% endfor %}
+        </span>
+      </div>
+    </div>
+    <div class="level-item">
+      <div>
+        <p class="heading has-text-centered">
+          {{ _("Credits") }}
+        </p>
+        <span class="has-text-right">
+          {% for credit_purchase in credit_purchases %}
+          <p class="title">
+            {{ credit_purchase.credits_purchased }}
+          </p>
+          {% endfor %}
+        </span>
+      </div>
+    </div>
+  </nav>
+</div>
+{% endblock %}
+
+{%- block tail -%}
+{{ super() }}
+
+<script>
+  addOnLoadFn(function() {
+    selectTab("account-tab");
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{%- extends "sumario/sumario.html" -%}
+
+{%- block menubar -%}
+<nav class="navbar has-shadow">
+  <div class="container">
+    <div class="navbar-menu">
+      <div class="navbar-start">
+        <a id="dashboard-tab" class="navbar-item" href="{{ url_for('dashboard.dashboard') }}">
+          {{ _("Dashboard") }}
+        </a>
+        <a id="account-tab" class="navbar-item" href="{{ url_for('account.account') }}">
+          {{ _("Account") }}
+        </a>
+        <div class="navbar-item">
+          <strong>
+            {{ _("Credits: %(num_credits)d", num_credits=current_user.credit_pool.num_credits) }}
+          </strong>
+        </div>
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <strong id="hi">
+            {{ _("Hi, %(name)s", name=current_user.email) }}
+          </strong>
+        </div>
+        <div class="navbar-item">
+          <a class="button" href="{{ url_for('user.logout') }}">
+            {{ _("Sign-out") }}
+          </a>
+        </div>
+        <a id="help-tab" class="navbar-item" href="{{ url_for('help.help') }}">
+          {{ _("Help") }}
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+{%- block tail -%}
+{{ super() }}
+
+<script>
+  addOnLoadFn(function() {
+    Array.prototype.filter.call(document.getElementsByClassName("toggle-success-url-checkbox"), function(elem) {
+      var state = {
+        prefix: elem.id.replace("toggle_success_url", "")
+      }
+      elem.onclick = function() {
+        toggleValue(state.prefix + "success_url", "{{ default_success_url }}", this.checked);
+      };
+    });
+  });
+</script>
+{% endblock %}

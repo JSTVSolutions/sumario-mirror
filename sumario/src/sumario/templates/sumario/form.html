@@ -1,0 +1,36 @@
+{%- macro render_form(form) -%}
+{% for field in form %}
+{% if field.widget.input_type in ('hidden',) %}
+{{ field(**kwargs) }}
+{% else %}
+{% if field.type not in ('FormField',) %}
+<div class="field">
+  {% if field.type in ('BooleanField',) %}
+  <div class="control">
+    <label class="checkbox" for="{{ field.id }}">
+      {{ field(**kwargs) }}
+      {{ field.label.text }}
+    </label>
+  </div>
+  {% else %}
+  {% if field.type in ('EmailField', 'PasswordField', 'StringField',) %}
+  <label class="label" for="{{ field.id }}">
+    {{ field.label.text }}
+  </label>
+  {% endif %}
+  {% if field.errors %}
+  {% for error in field.errors %}
+  <div class="help is-danger">
+    {{ error }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  <div class="control">
+    {{ field(**kwargs) }}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endmacro %}

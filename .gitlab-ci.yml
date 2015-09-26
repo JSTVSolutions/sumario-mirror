@@ -1,0 +1,86 @@
+image: registry.gitlab.com/tvaughan/containers/gitlab-ci-builder:latest
+
+variables:
+  GITLAB_USERNAME: gitlab-ci-token
+  GITLAB_PASSWORD: $CI_JOB_TOKEN
+  SUMARIO_ENVIRONMENT: testing
+
+stages:
+  - check
+  - publish-whl
+  - push-release
+  - deploy
+
+lint:
+  stage: check
+  services:
+    - docker:dind
+  variables:
+    POSTGRES_HOSTNAME: unused
+    POSTGRES_TCP_PORT: unused
+    POSTGRES_USERNAME: unused
+    POSTGRES_PASSWORD: unused
+  script:
+    - | # https://gitlab.com/gitlab-org/gitlab-foss/-/issues/19421
+      git checkout -B "$CI_COMMIT_REF_NAME" "$CI_COMMIT_SHA"
+      make sumario/lint -k || true # TODO:
+
+test:
+  stage: check
+  services:
+    - docker:dind
+    - postgres:15
+  variables:
+    POSTGRES_USER: "postgres"
+    POSTGRES_PASSWORD: "password"
+  script:
+    - | # https://gitlab.com/gitlab-org/gitlab-foss/-/issues/19421
+      git checkout -B "$CI_COMMIT_REF_NAME" "$CI_COMMIT_SHA"
+      export POSTGRES_HOSTNAME=$POSTGRES_PORT_5432_TCP_ADDR
+      export POSTGRES_TCP_PORT=$POSTGRES_PORT_5432_TCP_PORT
+      export POSTGRES_USERNAME=$POSTGRES_USER
+      export POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      make sumario/coverage
+
+publish-whl:
+  stage: publish-whl
+  services:
+    - docker:dind
+  variables:
+    POSTGRES_HOSTNAME: unused
+    POSTGRES_TCP_PORT: unused
+    POSTGRES_USERNAME: unused
+    POSTGRES_PASSWORD: unused
+  script:
+    - | # https://gitlab.com/gitlab-org/gitlab-foss/-/issues/19421
+      git checkout -B "$CI_COMMIT_REF_NAME" "$CI_COMMIT_SHA"
+      make sumario/build-whl sumario/publish-whl
+  only:
+    - main
+
+push-release:
+  stage: push-release
+  services:
+    - docker:dind
+  script:
+    - | # https://gitlab.com/gitlab-org/gitlab-foss/-/issues/19421
+      git checkout -B "$CI_COMMIT_REF_NAME" "$CI_COMMIT_SHA"
+      make container/build-release container/push-release
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  services:
+    - docker:dind
+  environment:
+    name: production
+  variables:
+    SUMARIO_ENVIRONMENT: production
+  script:
+    - | # https://gitlab.com/gitlab-org/gitlab-foss/-/issues/19421
+      git checkout -B "$CI_COMMIT_REF_NAME" "$CI_COMMIT_SHA"
+      make fly/set-secrets fly/deploy
+  only:
+    - main
+  resource_group: production

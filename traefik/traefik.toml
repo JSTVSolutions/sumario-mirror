@@ -1,0 +1,23 @@
+[global]
+checkNewVersion = false
+sendAnonymousUsage = false
+
+[api]
+insecure = true
+
+[providers]
+[providers.docker]
+exposedByDefault = false
+
+[entryPoints]
+[entryPoints.traefik]
+address = ":8675"
+[entryPoints.sumario]
+address = ":8443"
+[entryPoints.insecure]
+address = ":8080"
+[entryPoints.insecure.http.redirections]
+[entryPoints.insecure.http.redirections.entryPoint]
+permanent = true
+to = "sumario"
+scheme = "https"

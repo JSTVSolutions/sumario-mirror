@@ -1,0 +1,21 @@
+* {
+  font-family: system-ui, sans-serif;
+}
+
+.align-up {
+  align-items: normal;
+}
+
+.is-hidden {
+  display: none;
+}
+
+a.is-link {
+  text-decoration: underline;
+}
+
+div.card {
+  border: solid;
+  border-color: whitesmoke;
+  border-width: 1px;
+}
