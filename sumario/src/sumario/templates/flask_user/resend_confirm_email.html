@@ -2,12 +2,29 @@
 
 {% block content %}
 {% from "flask_user/_macros.html" import render_field, render_submit_field %}
-<h1>{%trans%}Resend Confirmation Email{%endtrans%}</h1>
+<h1 class="title">{{ _("Resend Confirmation Email") }}</h1>
 
-<form action="" method="POST" class="form" role="form">
+{{ super() }}
+
+<div class="box">
+  <form method="POST" action="#">
     {{ form.hidden_tag() }}
-    {{ render_field(form.email, tabindex=10) }}
-    {{ render_submit_field(form.submit, tabindex=90) }}
-</form>
+    {{ render_field(form.email, type="email") }}
+    {{ render_submit_field(form.submit, label=_("Resend Confirmation Email")) }}
+  </form>
+</div>
 
+{% if user_manager.USER_ENABLE_REGSITER %}
+<p class="has-text-right">
+  <a class="is-link" href="{{ url_for('user.login') }}">
+    {{ _("Sign in?") }}</a>
+</p>
+{% endif %}
+
+{% if user_manager.USER_ENABLE_REGISTER and not user_manager.USER_REQUIRE_INVITATION %}
+<p class="has-text-right">
+  <a class="is-link" href="{{ url_for('user.register') }}">
+    {{ _("Create new account?") }}</a>
+</p>
+{% endif %}
 {% endblock %}

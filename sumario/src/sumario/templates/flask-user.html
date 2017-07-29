@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sumario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ hashed_url_for('/css/bulma.min.css') }}">
+    <link rel="stylesheet" href="{{ hashed_url_for('/css/sumario.min.css') }}">
+  </head>
+  <body>
+    <nav class="navbar has-background-light" role="navigation" aria-label="navigation menu">
+      <div class="navbar-brand">
+        <a class="navbar-item is-link" href="/">
+          {{ _("Back") }}</a>
+      </div>
+    </nav>
+    <section class="hero is-fullheight is-light">
+      <div class="hero-body">
+        <div class="container">
+          <div class="columns is-vcentered">
+            <div class="column is-4 is-offset-4">
+              {% block content %}
+
+              {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+              {% for category, message in messages %}
+              <div id="message-{{ loop.index }}" class="columns is-centered">
+                <div class="column">
+                  <div class="notification is-{{ category }}">
+                    <button class="delete" onclick="hideElem('message-{{ loop.index }}')"></button>
+                    {{ message|safe }}
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+              {% endif %}
+              {% endwith %}
+
+              {% endblock %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="{{ hashed_url_for('/js/sumario.min.js') }}"></script>
+  </body>
+</html>
