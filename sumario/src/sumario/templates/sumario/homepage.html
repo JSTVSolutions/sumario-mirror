@@ -15,7 +15,7 @@
       {{ field.label.text|safe }}
     </label>
     <div class="control">
-      {{ field(class_='input', **kwargs) }}
+      {{ field(class_='input', required=True, **kwargs) }}
     </div>
   </div>
   {%- endmacro %}
@@ -191,7 +191,7 @@
                             {{ _("Email") }}
                           </label>
                           <div class="control">
-                            <input id="email" class="input" type="email" name="Email" />
+                            <input id="email" class="input" type="email" name="Email" required />
                           </div>
                         </div>
                         <div class="field">
@@ -199,7 +199,7 @@
                             {{ _("Message") }}
                           </label>
                           <div class="control">
-                            <textarea id="message" class="textarea" name="Message" rows="5"></textarea>
+                            <textarea id="message" class="textarea" name="Message" rows="5" required></textarea>
                           </div>
                         </div>
                         <div class="field">

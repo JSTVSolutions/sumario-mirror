@@ -5,6 +5,11 @@ class Sumario {
 
   static submit(formId, actionUrl) {
     let form = this._getElemById(formId);
+
+    if (!form.checkValidity()) {
+      return;
+    }
+
     form.action = actionUrl;
     form.submit();
   }
